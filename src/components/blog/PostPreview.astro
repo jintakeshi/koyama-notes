@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { HTMLTag, Polymorphic } from "astro/types";
+
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
+	post: CollectionEntry<"post">;
+	withDesc?: boolean;
+};
+
+const { as: Tag = "div", post, withDesc = false } = Astro.props;
+const postDate = post.data.publishDate;
+const formattedDate = `${postDate.getFullYear()}/${String(postDate.getMonth() + 1).padStart(2, "0")}/${String(postDate.getDate()).padStart(2, "0")}`;
+const ISO = postDate.toISOString();
+---
+
+<Tag>
+	{post.data.draft && <span class="text-red-500">(Draft) </span>}
+	<a class="hover:text-link" href={`/posts/${post.id}/`}>
+		{post.data.title}
+	</a>
+</Tag>
+<time class="text-muted min-w-24 font-semibold sm:justify-self-end" datetime={ISO} title={ISO}>
+	{formattedDate}
+</time>
+{withDesc && <q class="line-clamp-3 italic">{post.data.description}</q>}
