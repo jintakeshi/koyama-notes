@@ -9,10 +9,12 @@ import type { SiteMeta } from "@/types";
 
 interface Props {
 	meta: SiteMeta;
+	showFooter?: boolean;
 }
 
 const {
 	meta: { articleDate, description = siteConfig.description, ogImage, title },
+	showFooter = true,
 } = Astro.props;
 ---
 
@@ -29,7 +31,7 @@ const {
 		<main id="main">
 			<slot />
 		</main>
-		<Footer />
+		{showFooter && <Footer />}
 		<script is:inline type="speculationrules">
 			{
 				"prefetch": [

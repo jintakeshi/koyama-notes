@@ -10,6 +10,8 @@ const MAX_POSTS = 10;
 const allPosts = await getAllPosts();
 const allPostsByDate = allPosts.sort(collectionDateSort) as CollectionEntry<"post">[];
 const latestPosts = allPostsByDate.slice(0, MAX_POSTS);
+const formatPostDate = (date: Date) =>
+	`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
 // Pinned Posts, set to a max of 3;
 const MAX_PINNED_POSTS = 3;
@@ -36,12 +38,21 @@ const pinnedPosts = allPostsByDate
 		)
 	}
 	<section class={pinnedPosts.length > 0 ? "mt-16 text-base" : "text-base"}>
-		<h2 class="title text-accent mb-6 text-xl"><a href="/posts/">Posts</a></h2>
-		<ul class="space-y-4" role="list">
+		<h2 class="title mb-8 text-xl"><a href="/posts/">Posts</a></h2>
+		<ul class="space-y-8" role="list">
 			{
 				latestPosts.map((p) => (
-					<li class="grid gap-1 sm:grid-cols-[1fr_auto]">
-						<PostPreview post={p} />
+					<li>
+						<time
+							class="block text-xs leading-5 font-semibold text-global-text"
+							datetime={p.data.publishDate.toISOString()}
+							title={p.data.publishDate.toISOString()}
+						>
+							{formatPostDate(p.data.publishDate)}
+						</time>
+						<a class="mt-1 block text-base leading-6 text-global-text hover:text-link" href={`/posts/${p.id}/`}>
+							{p.data.title}
+						</a>
 					</li>
 				))
 			}
